@@ -9,3 +9,4 @@ use App\Http\Controllers\FrontEndController;
 // });
 
 Route::get('/', [FrontEndController::class, 'index']);
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
