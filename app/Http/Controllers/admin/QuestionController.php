@@ -1,3 +1,4 @@
+<?php
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -20,7 +21,7 @@ class QuestionController extends Controller
 
     public function import(Request $request) {
         $request->validate(['file' => 'required|mimes:csv,txt']);
-        
+
         $file = fopen($request->file('file')->getRealPath(), 'r');
         fgetcsv($file); // Lewati header
 

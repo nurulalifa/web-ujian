@@ -15,7 +15,7 @@ return new class extends Migration
             $class->id();
             $class->string('nisn')->unique()->nullable();
             $class->string('name');
-            $class->foreignId('school_id')->nullable()->constrained('sekolah')->onDelete('cascade');
+            $class->foreignId('school_id')->nullable()->constrained('schools')->onDelete('cascade');
             $class->string('username')->unique();
             $class->string('password');
             $class->timestamps();

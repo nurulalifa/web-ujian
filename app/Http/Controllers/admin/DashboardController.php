@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -15,7 +16,9 @@ class DashboardController extends Controller
 
     public function users()
     {
+        $admins = user::all();
+        $students = user::all()->where('role', 'student');
         // Jika ada view users, panggil di sini
-        return view('admin.users.index');
+        return view('admin.users.index', compact('admins','students'));
     }
 }

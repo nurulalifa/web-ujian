@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 // Import semua Controller Admin
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\admin\SchoolController;
@@ -11,6 +11,11 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\ScoreController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Guru\JenisUjianController;
+use App\Http\Controllers\Guru\SoalController;
+use App\Http\Controllers\Guru\UjianController;
+use App\Http\Controllers\Guru\SiswaController;
+use App\Http\Controllers\Guru\NilaiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,10 +30,10 @@ Route::get('/', function () {
 
 // 2. GRUP RUTE MODUL ADMIN (http://127.0.0.1:8000/admin/...)
 Route::prefix('admin')->name('admin.')->group(function () {
-    
+
     // Halaman Dashboard Utama Admin
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Manajemen User
     Route::get('/users', [DashboardController::class, 'users'])->name('users.index');
 
@@ -50,27 +55,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/scores', [ScoreController::class, 'index'])->name('scores.index');
 
     // 1. Rute untuk menampilkan halaman login (GET)
-    Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
+    // Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 
-    // 2. Rute untuk memproses data login saat tombol ditekan (POST)
-    Route::post('/login', [AuthController::class, 'login']); 
+    // // 2. Rute untuk memproses data login saat tombol ditekan (POST)
+    // Route::post('/login', [AuthController::class, 'login']);
     // Catatan: Jika di form action kamu mengarahkannya ke '/', ubah rute POST di atas menjadi Route::post('/', ...)
-}); 
-=======
+});
+// =======
 // Import Controller khusus dari Folder Guru
-use App\Http\Controllers\Guru\DashboardController;
-use App\Http\Controllers\Guru\JenisUjianController;
-use App\Http\Controllers\Guru\SoalController;
-use App\Http\Controllers\Guru\UjianController;
-use App\Http\Controllers\Guru\SiswaController;
-use App\Http\Controllers\Guru\NilaiController;
+
 
 // Redirect halaman awal langsung ke dashboard guru
 Route::redirect('/', '/guru/dashboard');
 
 // Group Route Modul Guru
 Route::prefix('guru')->name('guru.')->group(function () {
-    
+
     // 1. Dashboard Info
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -93,4 +93,4 @@ Route::prefix('guru')->name('guru.')->group(function () {
     // 6. Monitoring Nilai Siswa
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai.index');
 });
->>>>>>> b0ca6152fd9ed16e24d9dac231ec12399d15d7a8
+// >>>>>>> b0ca6152fd9ed16e24d9dac231ec12399d15d7a8

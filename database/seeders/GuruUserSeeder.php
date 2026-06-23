@@ -14,7 +14,7 @@ class GuruUserSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'guru@gmail.com'],
             [
-                'nama' => 'Guru Pengampu UTBK',
+                'name' => 'Guru Pengampu UTBK',
                 'no_hp' => '081234567891',
                 'password' => Hash::make('password'), // Password untuk login: password
                 'role' => 'guru'

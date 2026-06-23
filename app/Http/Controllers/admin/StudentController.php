@@ -1,8 +1,11 @@
+<?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Student;
-use App\Models\School;
+
+use App\Models\Schools;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,7 +13,7 @@ class StudentController extends Controller
 {
     public function index() {
         $students = Student::with('school')->get();
-        $schools = School::all();
+        $schools = Schools::all();
         return view('admin.students.index', compact('students', 'schools'));
     }
 
@@ -36,7 +39,7 @@ class StudentController extends Controller
 
     public function import(Request $request) {
         $request->validate(['file' => 'required|mimes:csv,txt']);
-        
+
         $file = fopen($request->file('file')->getRealPath(), 'r');
         fgetcsv($file); // Melewati baris pertama (header)
 
