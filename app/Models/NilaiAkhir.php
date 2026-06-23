@@ -12,7 +12,7 @@ class NilaiAkhir extends Model
         'id_siswa', 'id_ujian', 'total_nilai', 'rekomendasi',
     ];
 
-    public function ujian() {
-        return $this->belongsTo(Ujian::class, 'id_ujian', 'id_ujian');
-    }
+    // public function ujian() {
+    //     return $this->belongsTo(Ujian::class, 'id_ujian', 'id_ujian');
+    // }
 }

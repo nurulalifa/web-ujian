@@ -10,7 +10,7 @@ class JenisUjian extends Model
     use HasFactory;
 
     // Nama tabel di database sesuai dengan file migration kamu
-    protected $table = 'jenis_ujians'; 
+    protected $table = 'exam_types';
 
     // SOLUSI ERROR: Mengizinkan kolom ini untuk menyimpan data dari form
     protected $fillable = [

@@ -28,7 +28,7 @@ class SoalController extends Controller
         // Mengambil semua data dari database untuk mengisi pilihan dropdown
         $ujians = Ujian::all();
         $jenisUjians = JenisUjian::all();
-        
+
         // Mengirimkan variabel data ke halaman view tambah soal
         return view('guru.soal.create', compact('ujians', 'jenisUjians'));
     }

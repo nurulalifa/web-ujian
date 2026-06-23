@@ -1,4 +1,4 @@
- @extends('layouts.admin')
+ @extends('layouts.guru')
  @section('content')
  <div class="p-8 space-y-8 flex-grow">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

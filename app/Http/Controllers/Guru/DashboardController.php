@@ -13,7 +13,7 @@ class DashboardController extends Controller
     {
         return view('guru.dashboard', [
             'totalSoal' => Soal::count(),
-            'ujianAktif' => Ujian::where('status', 'mulai')->count(),
+            // 'ujianAktif' => Ujian::where('status', 'mulai')->count(),
             'siswaOnline' => User::where('role', 'siswa')->count()
         ]);
     }

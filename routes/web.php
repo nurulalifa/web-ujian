@@ -1,17 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
-use App\Http\Controllers\SiswaController;
 
-Route::get('/', function () {
-    return "Server Laravel Berhasil Berjalan!";
-});
 
-Route::get('/siswa/dashboard', [SiswaController::class, 'dashboard'])->name('siswa.dashboard');
-Route::get('/siswa/ujian/{id}', [SiswaController::class, 'mulaiUjian'])->name('siswa.ujian');
-Route::post('/siswa/ujian/{id}/selesai', [SiswaController::class, 'selesaiUjian'])->name('siswa.selesaiUjian');
-=======
+// Route::get('/', function () {
+//     return "Server Laravel Berhasil Berjalan!";
+// });
+
+
 
 //<<<<<<< HEAD
 // Import semua Controller Admin
@@ -22,11 +18,15 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\ScoreController;
 use App\Http\Controllers\AuthController;
+
 use App\Http\Controllers\Guru\JenisUjianController;
 use App\Http\Controllers\Guru\SoalController;
 use App\Http\Controllers\Guru\UjianController;
-use App\Http\Controllers\Guru\SiswaController;
+use App\Http\Controllers\Guru\SiswaController as GuruSiswaController;
 use App\Http\Controllers\Guru\NilaiController;
+
+use App\Http\Controllers\SiswaController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -99,10 +99,15 @@ Route::prefix('guru')->name('guru.')->group(function () {
     Route::post('/ujian/toggle/{id}', [UjianController::class, 'toggle'])->name('ujian.toggle'); // Disinkronkan ke fungsi toggle()
 
     // 5. Monitoring Status Siswa
-    Route::get('/status-siswa', [SiswaController::class, 'index'])->name('siswa.index');
+    Route::get('/status-siswa', [GuruSiswaController::class, 'index'])->name('siswa.index');
 
     // 6. Monitoring Nilai Siswa
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai.index');
 });
-// >>>>>>> b0ca6152fd9ed16e24d9dac231ec12399d15d7a8
->>>>>>> 5b7ee1d359a3ed0b3861bd838a2dc06d7c468600
+
+Route::prefix('siswa')->name('siswa.')->group(function () {
+
+Route::get('/dashboard', [SiswaController::class, 'dashboard'])->name('siswa.dashboard');
+Route::get('/ujian/{id}', [SiswaController::class, 'mulaiUjian'])->name('ujian');
+Route::post('/ujian/{id}/selesai', [SiswaController::class, 'selesaiUjian'])->name('siswa.selesaiUjian');
+});

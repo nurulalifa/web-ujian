@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.guru')
 @section('content')
 <div class="card p-4 border-0 shadow-sm bg-white mb-4">
     <h4 class="fw-bold text-dark">Selamat Datang di Panel Guru</h4>
