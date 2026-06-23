@@ -12,13 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            // SOLUSI UTAMA: Wajib ada ID sebagai Primary Key untuk relasi Foreign Key tabel lain
+            $table->id(); 
+            
+            $table->string('nama');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('no_hp');
+            $table->string('no_ortu')->nullable();
+            $table->enum('role', ['admin', 'guru', 'siswa']);
             $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+            
+            // Opsional tapi sangat disarankan: mencatat waktu data dibuat & diupdate
+            $table->timestamps(); 
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
