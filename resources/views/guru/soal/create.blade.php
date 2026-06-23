@@ -1,120 +1,94 @@
-<!DOCTYPE html>
-<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tambah Soal - Guru</title>
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendor/fonts/boxicons.css') }}" />
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{ asset('backend/assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="{{ asset('backend/assets/css/demo.css') }}" />
-</head>
-<body>
-    <div class="layout-wrapper layout-content-navbar">
-        <div class="layout-container">
+@extends('layouts.app')
+
+@section('content')
+<div class="card p-4 border-0 shadow-sm bg-white" style="border-radius: 10px;">
+    <h5 class="fw-bold mb-4"><i class="bi bi-file-earmark-plus me-2 text-primary"></i>Form Pembuatan Soal Baru</h5>
+    
+    <form action="{{ route('guru.soal.store') }}" method="POST">
+        @csrf 
+        <div class="mb-3">
+            <label class="form-label fw-bold text-secondary">Pilih Induk Paket Ujian</label>
+            <select class="form-select" name="ujian_id" required>
+                <option value="" selected disabled>-- Pilih Paket Ujian --</option>
+                @foreach($ujians ?? [] as $u) 
+                    <option value="{{ $u->id }}">{{ $u->nama_ujian }}</option> 
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold text-secondary">Pilih Komponen Sub / Jenis Ujian</label>
+            <select class="form-select" name="jenis_ujian_id" required>
+                {{-- Mencari ID Jenis Ujian Pilihan Ganda secara dinamis berdasarkan data pertama yang ada --}}
+                @foreach($jenisUjians ?? [] as $ju)
+                    @if(Str::contains(Str::lower($ju->nama_jenis_ujian), 'pilihan ganda') || $loop->first)
+                        <option value="{{ $ju->id }}" selected>Pilihan Ganda</option>
+                        @break
+                    @endif
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label fw-bold text-secondary fs-5">Teks Narasi Soal</label>
+            <textarea class="form-control" name="soal" rows="8" placeholder="Ketik butir soal di sini (tanpa menyertakan pilihan A/B/C/D/E)..." style="font-size: 1.05rem;" required></textarea>
+        </div>
+
+        <div class="card bg-light p-3 mb-4 border-0" style="border-radius: 8px;">
+            <h6 class="fw-bold text-secondary mb-3"><i class="bi bi-list-ol me-2 text-primary"></i>Input Pilihan Jawaban</h6>
             
-            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-                <div class="app-brand demo">
-                    <span class="app-brand-text demo menu-text fw-bolder ms-2">Web Ujian</span>
-                </div>
-                <div class="menu-inner-shadow"></div>
-
-                <ul class="menu-inner py-1">
-                    <li class="menu-item {{ Request::is('guru/dashboard') ? 'active' : '' }}">
-                        <a href="{{ url('/guru/dashboard') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div>Dashboard</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ Request::is('guru/soal*') ? 'active' : '' }}">
-                        <a href="{{ url('/guru/soal') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-book-open"></i>
-                            <div>Kelola Soal</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ Request::is('guru/ujian*') ? 'active' : '' }}">
-                        <a href="{{ url('/guru/ujian') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-stopwatch"></i>
-                            <div>Kontrol Ujian</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ Request::is('guru/nilai-siswa*') ? 'active' : '' }}">
-                        <a href="{{ url('/guru/nilai-siswa') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-medal"></i>
-                            <div>Daftar Nilai</div>
-                        </a>
-                    </li>
-                </ul>
-            </aside>
-
-            <div class="layout-page">
-                <div class="content-wrapper">
-                    <div class="container-xxl flex-grow-1 py-4">
-                        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Guru / Kelola Soal /</span> Tambah Soal</h4>
-
-                        <div class="card mb-4">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Form Input Soal Baru</h5>
-                                <a href="{{ url('/guru/soal') }}" class="btn btn-secondary btn-sm">Kembali</a>
-                            </div>
-                            <div class="card-body">
-                                <form action="{{ url('/guru/soal') }}" method="POST">
-                                    @csrf
-                                    
-                                    <div class="mb-3">
-                                        <label class="form-label">Hubungkan ke Paket Ujian</label>
-                                        <select name="ujian_id" class="form-select" required>
-                                            <option value="">-- Pilih Ujian --</option>
-                                            @foreach($ujians as $u)
-                                                <option value="{{ $u->id }}">{{ $u->nama_ujian }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Pertanyaan Soal</label>
-                                        <textarea name="pertanyaan" class="form-control" rows="4" placeholder="Tuliskan soal ujian di sini..." required></textarea>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Pilihan A</label>
-                                            <input type="text" name="a" class="form-control" placeholder="Jawaban A" required />
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Pilihan B</label>
-                                            <input type="text" name="b" class="form-control" placeholder="Jawaban B" required />
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Pilihan C</label>
-                                            <input type="text" name="c" class="form-control" placeholder="Jawaban C" required />
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Pilihan D</label>
-                                            <input type="text" name="d" class="form-control" placeholder="Jawaban D" required />
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Kunci Jawaban Benar</label>
-                                        <select name="jawaban" class="form-select" required>
-                                            <option value="a">A</option>
-                                            <option value="b">B</option>
-                                            <option value="c">C</option>
-                                            <option value="d">D</option>
-                                        </select>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-primary d-block w-100 mt-4">Simpan Pertanyaan</button>
-                                </form>
-                            </div>
-                        </div>
-
-                    </div>
+            <div class="mb-3">
+                <div class="input-group">
+                    <span class="input-group-text fw-bold bg-white text-primary">A</span>
+                    <input type="text" class="form-control" name="pilihan_a" placeholder="Ketik isi pilihan jawaban A" required>
                 </div>
             </div>
 
+            <div class="mb-3">
+                <div class="input-group">
+                    <span class="input-group-text fw-bold bg-white text-primary">B</span>
+                    <input type="text" class="form-control" name="pilihan_b" placeholder="Ketik isi pilihan jawaban B" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="input-group">
+                    <span class="input-group-text fw-bold bg-white text-primary">C</span>
+                    <input type="text" class="form-control" name="pilihan_c" placeholder="Ketik isi pilihan jawaban C" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="input-group">
+                    <span class="input-group-text fw-bold bg-white text-primary">D</span>
+                    <input type="text" class="form-control" name="pilihan_d" placeholder="Ketik isi pilihan jawaban D" required>
+                </div>
+            </div>
+
+            <div class="mb-0">
+                <div class="input-group">
+                    <span class="input-group-text fw-bold bg-white text-primary">E</span>
+                    <input type="text" class="form-control" name="pilihan_e" placeholder="Ketik isi pilihan jawaban E (Kosongkan jika hanya sampai D)">
+                </div>
+            </div>
         </div>
-    </div>
-</body>
-</html>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-secondary">Kunci Jawaban</label>
+                <input type="text" class="form-control" name="jawaban" placeholder="Contoh: C" maxlength="1" style="text-transform: uppercase;" required>
+                <div class="form-text">Masukkan 1 huruf kapital (A/B/C/D/E)</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-secondary">Bobot Poin</label>
+                <input type="number" class="form-control" name="point" value="5" min="1" required>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary px-4"><i class="bi bi-save me-1"></i>Simpan Instrumen Soal</button>
+            <a href="{{ route('guru.soal.index') }}" class="btn btn-light px-3">Kembali</a>
+        </div>
+    </form>
+</div>
+@endsection

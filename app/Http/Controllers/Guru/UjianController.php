@@ -3,68 +3,73 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Ujian;
 use App\Models\Sekolah;
-use Illuminate\Http\Request;
 
 class UjianController extends Controller
 {
     /**
-     * 1. Menampilkan Halaman Utama Kontrol Ujian
+     * Menampilkan Form Pembuatan Jadwal & Tabel Monitoring
      */
     public function index()
     {
-        // Mengambil semua data ujian tanpa memanggil relasi sekolah yang rusak
-        $ujians = Ujian::latest()->get();
-
-        return view('guru.ujian.index', compact('ujians'));
-    }
-
-    /**
-     * 2. Menampilkan Form Buat Jadwal Ujian Baru
-     */
-    public function create()
-    {
+        // 1. Ambil semua data sekolah dari database
         $sekolahs = Sekolah::all();
-        return view('guru.ujian.create', compact('sekolahs'));
+
+        // 2. KONTROL DARURAT: Jika database kosong, kita paksa buatkan data SMKN 7 Pekanbaru langsung di sini
+        if ($sekolahs->isEmpty()) {
+            Sekolah::create(['id' => 1, 'nama_sekolah' => 'SMKN 7 Pekanbaru']);
+            $sekolahs = Sekolah::all(); // Ambil ulang setelah dibuat
+        }
+        
+        // 3. Ambil data jadwal ujian beserta sekolahnya
+        $ujians = Ujian::with('sekolah')->get();
+
+        // 4. Kirimkan data ke view
+        return view('guru.ujian.index', compact('sekolahs', 'ujians'));
     }
 
     /**
-     * 3. Menyimpan Jadwal Ujian Baru ke Database
+     * Menyimpan Jadwal Sesi Ujian Baru ke Database
      */
     public function store(Request $request)
     {
-        // Validasi input minimal dari form HTML
         $request->validate([
-            'nama_ujian' => 'required',
-            'tanggal'    => 'required',
-            'durasi'     => 'required|numeric',
+            'sekolah_id'    => 'required',
+            'nama_ujian'    => 'required|string|max:255',
+            'tgl'           => 'required|date',
+            'mulai_ujian'   => 'required',
+            'selesai_ujian' => 'required',
         ]);
 
-        // HANYA menyimpan kolom dasar yang 100% ada di database Anda agar tidak memicu "Unknown column"
         Ujian::create([
-            'nama_ujian' => $request->nama_ujian,
-            'tanggal'    => $request->tanggal,
-            'durasi'     => $request->durasi,
+            'sekolah_id'    => $request->sekolah_id,
+            'nama_ujian'    => $request->nama_ujian,
+            'tgl'           => $request->tgl,
+            'mulai_ujian'   => $request->mulai_ujian,
+            'selesai_ujian' => $request->selesai_ujian,
+            'status'        => 'belum', //
         ]);
 
-        // Kembali ke halaman kontrol ujian dengan pesan sukses
-        return redirect('/guru/ujian')->with('sukses', 'Jadwal ujian baru berhasil dibuat!');
+        return redirect()->route('guru.ujian.index')->with('success', 'Jadwal sesi ujian baru berhasil didaftarkan!');
     }
 
     /**
-     * 4. Aksi Tombol Mulai Ujian (Dibuat aman tanpa edit kolom database)
+     * Mengubah Status Sakelar Ujian
      */
-    public function mulaiUjian($id)
+    public function toggle(Request $request, $id)
     {
-        return redirect('/guru/ujian')->with('sukses', 'Ujian berhasil diaktifkan!');
-    }
+        $ujian = Ujian::findOrFail($id);
+        
+        $request->validate([
+            'status' => 'required|in:belum,mulai,selesai'
+        ]);
 
-    /**
-     * 5. Aksi Tombol Selesai Ujian (Dibuat aman tanpa edit kolom database)
-     */
-    public function selesaiUjian($id)
-    {
-        return redirect('/guru/ujian')->with('sukses', 'Ujian telah ditutup!');
+        $ujian->update([
+            'status' => $request->status
+        ]);
+
+        return redirect()->route('guru.ujian.index')->with('success', 'Status akses sesi ujian berhasil diperbarui!');
     }
 }

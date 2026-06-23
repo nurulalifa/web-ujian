@@ -9,26 +9,26 @@ class Soal extends Model
 {
     use HasFactory;
 
-    // Menentukan nama tabel (pastikan sesuai dengan nama tabel Anda di database)
     protected $table = 'soals';
 
-    // Menampung kolom-kolom agar diizinkan untuk disimpan
+    // Membuka proteksi mass assignment untuk kolom-kolom soal
     protected $fillable = [
         'ujian_id',
-        'pertanyaan',
-        'a',
-        'b',
-        'c',
-        'd',
-        'jawaban'
+        'jenis_ujian_id',
+        'soal',
+        'jawaban',
+        'point'
     ];
 
-    /**
-     * Relasi ke model Ujian
-     * Ini fungsi yang dicari oleh SoalController agar tidak error lagi
-     */
+    // Relasi ke tabel Ujian
     public function ujian()
     {
         return $this->belongsTo(Ujian::class, 'ujian_id');
+    }
+
+    // Relasi ke tabel Jenis Ujian
+    public function jenisUjian()
+    {
+        return $this->belongsTo(JenisUjian::class, 'jenis_ujian_id');
     }
 }

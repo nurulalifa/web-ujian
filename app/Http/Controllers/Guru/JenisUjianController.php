@@ -3,54 +3,34 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
-use App\Models\JenisUjian;
 use Illuminate\Http\Request;
+use App\Models\JenisUjian; // Membaca tabel jenis_ujians / sub_ujian
 
 class JenisUjianController extends Controller
 {
     public function index()
     {
-        $jenis = JenisUjian::all();
-        return view('guru.jenis_ujian.index', compact('jenis'));
-    }
-
-    public function create()
-    {
-        return view('guru.jenis_ujian.create');
+        $jenisUjians = JenisUjian::all();
+        return view('guru.jenis_ujian.index', compact('jenisUjians'));
     }
 
     public function store(Request $request)
-    {
-        JenisUjian::create([
-            'nama_jenis' => $request->nama_jenis
-        ]);
+{
+    $request->validate([
+        'nama_jenis_ujian' => 'required|string|max:255'
+    ]);
 
-        return redirect()->route('jenis-ujian.index')
-            ->with('success', 'Jenis ujian berhasil ditambahkan');
-    }
+    // Menginput data langsung menggunakan class Model yang sudah dipasang $fillable
+    \App\Models\JenisUjian::create([
+        'nama_jenis_ujian' => $request->nama_jenis_ujian
+    ]);
 
-    public function edit($id)
-    {
-        $jenis = JenisUjian::findOrFail($id);
-        return view('guru.jenis_ujian.edit', compact('jenis'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $jenis = JenisUjian::findOrFail($id);
-        $jenis->update([
-            'nama_jenis' => $request->nama_jenis
-        ]);
-
-        return redirect()->route('jenis-ujian.index')
-            ->with('success', 'Berhasil diupdate');
-    }
+    return redirect()->back()->with('success', 'Kategori sub ujian baru berhasil disimpan!');
+}
 
     public function destroy($id)
     {
-        JenisUjian::destroy($id);
-
-        return redirect()->route('jenis-ujian.index')
-            ->with('success', 'Berhasil dihapus');
+        JenisUjian::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Jenis ujian berhasil dihapus.');
     }
 }

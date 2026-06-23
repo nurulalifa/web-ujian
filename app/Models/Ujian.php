@@ -12,10 +12,16 @@ class Ujian extends Model
     protected $table = 'ujians';
 
     protected $fillable = [
+        'sekolah_id',
         'nama_ujian',
-        'tanggal',
-        'durasi',
+        'tgl',
         'mulai_ujian',
-        'selesai_ujian'
+        'selesai_ujian',
+        'status' // Penting untuk sakelar mulai/selesai ujian
     ];
+
+    public function sekolah()
+    {
+        return $this->belongsTo(Sekolah::class, 'sekolah_id');
+    }
 }
